@@ -1,0 +1,30 @@
+{% extends 'header.html' %}
+{% block content %}
+
+<div class="container" id="myModal" >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" style="color: blue">Edit Album</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+    
+            {% for field in form %}
+             <div class="form-group">
+                  <label class="control-label col-sm-2" for="artist">{{ field.label }}</label>
+                  <div class="col-sm-8">
+                    {{ field }}
+                  </div>
+                </div>
+
+            {% endfor %}
+        <div class="form-group">        
+      <div class="col-sm-offset-2 col-sm-8">
+        <button type="submit" class="btn btn-default" value="Update">Update</button>
+         <button type="button" onclick="$('#myModal').hide()" class="btn btn-danger">Close</button>
+      </div>
+    </div>
+  </form>
+{% endblock %}

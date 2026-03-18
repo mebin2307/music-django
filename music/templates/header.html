@@ -1,0 +1,79 @@
+{%load static %}
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>www.MyMusic.com</title>
+<link rel="shortcut icon" href="/static/images/gallery/music.jpg" type="image/x-icon">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/style.less' %}"/>
+<script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/js/jquery-min.js' %}"></script>
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> 
+<link href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/theme.css' %}" rel="stylesheet">
+<link id="themecss" rel="stylesheet" type="text/css" href="https://www.shieldui.com/shared/components/latest/css/light/all.min.css" />
+<link href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js">
+
+</script>
+<style type="text/css">
+  footer {
+    width: 100%;
+    height: 60px;
+    background: red;
+    position: fixed;
+    bottom: 0;
+}
+</style>
+</head>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <!-- <img src="/static/images/gallery/music.jpg" style="height: 80px"> -->
+   
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href=""><span class="glyphicon glyphicon-home"></span>&nbspHome</a></li>
+      <li><a href="{% url 'music:index' %}"><span class="glyphicon glyphicon-play-circle"></span>&nbspPlaylist</a></li>
+      <!--  <li><a href="{% url 'music:song' %}"><span class="glyphicon glyphicon-music"></span>&nbspSong</a></li> -->
+      
+    </ul>
+    <form class="navbar-form navbar-left" method="GET" action="{% url 'music:search' %}" enctype="multipart/form-data">
+      <div class="form-group">
+        <input type="text" class="form-control" name='q' value="{{ request.GET.q }}">
+      </div>
+      <button type="submit" class="btn btn-default">Search</button>
+    </form>
+     <ul class="nav navbar-nav navbar-right">
+     {% if user.is_authenticated %}
+     <li><a href="{% url 'music:addsong' %}"><span class="glyphicon glyphicon-plus-sign" data-toggle="modal" >&nbspSongs</a></li>
+      <li><a href="{% url 'music:addalbum' %}"><span class="glyphicon glyphicon-plus-sign" data-toggle="modal" >&nbspAddAlbum</span></a></li>
+
+      {% endif %}
+
+     {% if user.is_authenticated %}
+      <li><a href="{% url 'logout' %}"><button type="button" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-log-out"></span> Log out
+        </button></a></li>
+      {% else %}
+      <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in" data-toggle="modal" >&nbsplogin</span></a></li>
+      {% endif %}
+
+    </ul>
+  </div>
+</nav>
+
+
+
+<body>
+{% block content %}
+
+
+{% endblock %}
+</body>
+
+
+</html>

@@ -1,0 +1,264 @@
+{% extends 'header.html' %} 
+{%load static %}
+{% block content %}
+
+<script type="text/javascript" src="{% static 'js/play.js' %}"></script> 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.3.21/plyr.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.plyr.io/3.3.21/plyr.css" rel="stylesheet">
+<script src="{% static 'js/script.js' %}" type="text/javascript"></script>
+ <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/demo.css' %}">   -->
+<style type="text/css">
+    th
+{
+    font-size: 20;
+    color: #2f3136;
+}
+td{
+    color: #2f3136;
+    font-family: Roboto;
+    font-size:13px;
+}
+</style> 
+</br>
+</br>
+<div class="container">
+    <div class="col-md-16">
+        <div class="panel panel-primary">
+            <!-- <div class="panel-heading">
+                <h3 class="panel-title">{{ album.album_title }}</h3>
+            </div> -->
+        
+             <div class="col-md-12 panel-body" style="background-color: #E5E5E5; width: 100%; height: auto;">
+                
+        
+                 {% csrf_token %}
+                    
+            
+                   <img src="/{{ album.album_logo }}" height="25%" width="25%" alt="" style="margin-bottom: 10px;">
+                
+            
+                   </br>
+                     <div class="table-responsive" > 
+
+                       <ul class="list-group" id="list">
+                       <li class="list-group-item" style="width:100%; background:#E5E5E5">
+                        
+                        <div class="raw" id="head">
+                        <h3>
+                        <div class="col-md-3">#</div> 
+                        <div class="col-md-3">TITLE</div>   
+                        <div class="col-md-3">ARTIST</div>
+                        <th class="col-md-3"></th>
+                                   
+                        </h3>
+    
+                        </div>
+                        <table  class="raw table">
+                        <tbody id="myaudio">
+                        {% for song in album.song_set.all %}  
+                       
+                        <tr> 
+                        <td class="col-md-3"> {{ forloop.counter }}</td>
+                        <td class="col-md-3" id="song"><h5 href="#" data-value="/{{ song.audio_file }}">{{ song.song_title }}</h5></td>
+                        <td class="col-md-3">{{ album.artist }}</td>
+                        <td class="col-md-3">
+                        
+                        </td>
+                                              
+                        </tr> 
+                        
+                             {% endfor %}                                             
+                        </tbody>
+                        </table>                          
+                       </li>
+                       </ul>
+                       </div>
+
+            </br>
+            <div class="panel-footer text-center">
+                  {% if user.is_authenticated %}
+                  <a href="{% url 'music:addsong' %}"><span class="glyphicon glyphicon-plus-sign" data-toggle="modal" >&nbspAdd Song</span></a>
+                  {% endif %}
+                
+            </div>
+        </div>
+    </div>
+    
+
+</div>
+<h1 id ="winners"></h1>
+
+
+<a href="javascript:random()">Pick Random Winner(s)</a>
+</div>
+
+
+
+ 
+    <div class="col-sm-4" style="margin-top: 14%;height: 15%; width:100%;background: #E5E5E5; position: fixed;"">
+    <audio id="audio1" controls>
+        <source src="/{{ song.audio_file  }}" id="audioSource" type="">
+    </audio>    
+    <div class="col-sm-4" style="margin-left: 0%;background: #E5E5E5;margin-top: 0%; height: 50%; width: 100%;padding-left: 10%;">
+               <span onclick="refresh()"   id="refresh" class="glyphicon glyphicon-refresh"></span>
+               <span onclick=""   id="prev" class="glyphicon glyphicon-step-backward"></span>
+
+                <span onclick="playVid()" type="button"  id="play" class="glyphicon glyphicon-play"></span>
+                <span onclick="pauseVid()" type="button"  id="pause" style="display: none"; class="glyphicon glyphicon-pause"></span> 
+                <span onclick="" type="button"  id="next" class="glyphicon glyphicon-step-forward"></span>
+                <span onclick="random()"   id="random" class="glyphicon glyphicon-random"></span>
+    </div>
+    </div>
+    
+
+<script type="text/javascript">
+//  select  audio 
+var audio = document.getElementById('audio1');
+list.onclick = function(e) {
+  e.preventDefault();
+
+  var elm = e.target;
+
+
+  var source = document.getElementById('audioSource');
+  
+  source.src = elm.getAttribute('data-value');
+
+  audio.load(); //call this to just preload the audio without playing
+  audio.play(); //call this to play the song right away
+  $("#play").hide();
+  $("#pause").show();
+};
+
+
+// play and push audio
+
+function playVid() {
+
+    audio.play();
+    $("#play").hide();
+    $("#pause").show();
+
+} 
+function refresh() { 
+
+    document.getElementById("audio1").load();
+    $("#play").show();
+    $("#pause").hide();
+
+} 
+
+function pauseVid() { 
+    audio.pause(); 
+    $("#play").show();
+    $("#pause").hide();
+} 
+
+
+
+// next privouse 
+
+var $first = $('tr:first', 'table'),
+    $last = $('tr:last', 'table');
+$("#next").click(function () {
+    var $next, $selected = $(".selected");
+
+
+    $next = $selected.next('tr').length ? $selected.next('tr') : $first;
+    $selected.removeClass("selected");
+    $next.addClass('selected');
+});
+
+$("#prev").click(function () {
+    var $prev, $selected = $(".selected");
+
+    $prev = $selected.prev('tr').length ? $selected.prev('tr') : $last;
+    $selected.removeClass("selected");
+    $prev.addClass('selected');
+});
+
+// alert(document.getElementById("list").getElementsByTagName("a").length);
+
+
+
+</script>
+<style type="text/css">
+.plyr--audio .plyr__controls {
+    background: #E5E5E5;
+    border-radius: inherit;
+    color: #1e1f23;
+    padding: 10px;
+    margin-right: 5px;
+}
+.selected {
+    background-color: yellow;
+}
+.plyr__controls .plyr__time
+{
+  margin-left: 20px;
+}
+.plyr__progress input[type=range] {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+}
+#head{
+    color: #2f3136;
+    text-align: left;
+}
+
+.image {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: .10s ease;
+  backface-visibility: hidden;
+}
+
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+.text {
+   border-radius: 50%;
+   width: 50%;
+   height: 50%;  
+  font-size: 16px;
+  padding: 16px 32px;
+}
+
+.col-sm-4:hover .image {
+  opacity: 0.3;
+}
+
+.col-sm-4:hover .middle {
+  opacity: 1;
+}
+
+#picon
+{
+    content: '';
+    width: 230px;
+    height: 200px;
+    display: block;
+    cursor: pointer;
+    position: relative;
+    left: 4px;
+    opacity: 1;
+    z-index:3;
+}
+
+</style>
+
+
+
+
+{% endblock %}
+
